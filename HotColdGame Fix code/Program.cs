@@ -6,8 +6,6 @@ do
     int secretNumber = random.Next(1, 101);
     int attempts = 0;
     int guess;
-    int previousDistance = 0;
-    bool hasPreviousGuess = false;
 
     Console.WriteLine("=================================");
     Console.WriteLine("      Игра Холодно / Горячо");
@@ -18,19 +16,20 @@ do
     Console.WriteLine("Введите число:");
 
     bool success = int.TryParse(Console.ReadLine(), out guess);
-
+    Console.WriteLine(secretNumber);
     while (!success || guess != secretNumber)
     {
-        if (!success)
+        if (!success || guess < 1 || guess > 100)
         {
             Console.WriteLine("Введите допустимое число от 1 до 100");
             success = int.TryParse(Console.ReadLine(), out guess);
         }
+
         else
         {
             attempts += 1;
 
-            int currentDistance = secretNumber - guess;
+            int currentDistance = Math.Abs(secretNumber - guess);
 
             if (currentDistance <= 3)
             {
@@ -57,20 +56,6 @@ do
                 Console.WriteLine("Очень холодно!");
             }
 
-            if (hasPreviousGuess)
-            {
-                if (currentDistance < previousDistance)
-                {
-                    Console.WriteLine("Стало теплее!");
-                }
-                else if (currentDistance > previousDistance)
-                {
-                    Console.WriteLine("Стало холоднее!");
-                }
-            }
-
-            previousDistance = currentDistance;
-            hasPreviousGuess = true;
 
             Console.WriteLine("Попробуй ещё:");
             success = int.TryParse(Console.ReadLine(), out guess);
@@ -81,7 +66,7 @@ do
     Console.WriteLine($"Количество попыток: {attempts}");
     Console.WriteLine("Хотите сыграть ещё раз? (да/нет)");
 
-    string input = Console.ReadLine();
+    string input = Console.ReadLine().Trim().ToLower();
 
     repeat = input == "да" || input == "y";
 

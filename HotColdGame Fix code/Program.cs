@@ -1,11 +1,36 @@
-﻿bool repeat;
-Random random = new Random();
+﻿using System.Numerics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
+bool repeat;
+Random random = new Random();
+static string GetHint(int distance)
+{
+    if (distance <= 3)
+        return "Очень горячо";
+    else if (distance <= 7)
+        return "Горячо";
+    else if (distance <= 15)
+        return "Тепло";
+    else
+        return "Холодно";
+}
 do
 {
     int secretNumber = random.Next(1, 101);
     int attempts = 0;
     int guess;
+    Console.WriteLine(secretNumber);
+    static int GetValidNumber()
+    {
+        int number;
+        bool success = int.TryParse(Console.ReadLine(), out number);
+        while (!success || number < 1 || number > 100)
+                {    
+                        Console.WriteLine("Введите допустимое число от 1 до 100");
+                        success = int.TryParse(Console.ReadLine(), out number);
+                }
+        return number;
+    }
 
     Console.WriteLine("=================================");
     Console.WriteLine("      Игра Холодно / Горячо");
@@ -14,54 +39,22 @@ do
     Console.WriteLine("Попробуй его угадать!");
 
     Console.WriteLine("Введите число:");
+    guess = GetValidNumber();
+    attempts += 1;
 
-    bool success = int.TryParse(Console.ReadLine(), out guess);
-    Console.WriteLine(secretNumber);
-    while (!success || guess != secretNumber)
+    while (guess != secretNumber)
     {
-        if (!success || guess < 1 || guess > 100)
-        {
-            Console.WriteLine("Введите допустимое число от 1 до 100");
-            success = int.TryParse(Console.ReadLine(), out guess);
-        }
-
-        else
-        {
-            attempts += 1;
-
             int currentDistance = Math.Abs(secretNumber - guess);
+            string hint = GetHint(currentDistance);
+            Console.WriteLine(hint);
+            
+            
 
-            if (currentDistance <= 3)
-            {
-                Console.WriteLine("Очень горячо!");
-            }
-            else if (currentDistance <= 7)
-            {
-                Console.WriteLine("Горячо!");
-            }
-            else if (currentDistance <= 15)
-            {
-                Console.WriteLine("Тепло!");
-            }
-            else if (currentDistance <= 30)
-            {
-                Console.WriteLine("Холодно!");
-            }
-            else if (currentDistance <= 50)
-            {
-                Console.WriteLine("Холоднее!");
-            }
-            else
-            {
-                Console.WriteLine("Очень холодно!");
-            }
+        Console.WriteLine("Попробуй ещё:");
+        guess = GetValidNumber();
+        attempts += 1;
 
-
-            Console.WriteLine("Попробуй ещё:");
-            success = int.TryParse(Console.ReadLine(), out guess);
-        }
     }
-
     Console.WriteLine("Ты угадал!");
     Console.WriteLine($"Количество попыток: {attempts}");
     Console.WriteLine("Хотите сыграть ещё раз? (да/нет)");
